@@ -1,7 +1,7 @@
 {
-  "file": "heartbeats_20251230_143044.json",
+  "file": "heartbeats_20251230_144046.json",
   "proof_version": "poa-exports-v1",
-  "sequence": 6,
-  "sha256": "6e33d69426d5c529f851840e4853fc2ac4ebc81dc044351425f5e2eb67906405",
-  "ts": "2025-12-30T14:35:01Z"
+  "sequence": 8,
+  "sha256": "d19e81c7852823e080619e9d61e19ab78dd42f690baa3cb7a8be9553d7888155",
+  "ts": "2025-12-30T14:45:01Z"
 }

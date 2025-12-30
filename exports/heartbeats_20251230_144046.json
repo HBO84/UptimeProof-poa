@@ -1,69 +1,14 @@
 {
   "_poa": {
-    "prev_file": "heartbeats_20251230_143044.json",
-    "prev_sha256": "6e33d69426d5c529f851840e4853fc2ac4ebc81dc044351425f5e2eb67906405",
+    "prev_file": "heartbeats_20251230_143545.json",
+    "prev_sha256": "f9693d2ac4ca1ae5e55bde5f0c6ef9a64748bfe5f49853ab7b5a13817366e135",
     "proof_version": "poa-exports-v1",
-    "sequence": 7,
-    "ts": "2025-12-30T14:40:01Z"
+    "sequence": 8,
+    "ts": "2025-12-30T14:45:01Z"
   },
   "data": {
     "1": {
       "beats": [
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8190,
-          "important": false,
-          "monitor_id": 1,
-          "msg": "200 - OK",
-          "ping": 12,
-          "status": 1,
-          "time": "2025-12-30 12:55:53.414"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8193,
-          "important": false,
-          "monitor_id": 1,
-          "msg": "200 - OK",
-          "ping": 18,
-          "status": 1,
-          "time": "2025-12-30 12:56:53.431"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8196,
-          "important": false,
-          "monitor_id": 1,
-          "msg": "200 - OK",
-          "ping": 18,
-          "status": 1,
-          "time": "2025-12-30 12:57:53.456"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8199,
-          "important": false,
-          "monitor_id": 1,
-          "msg": "200 - OK",
-          "ping": 16,
-          "status": 1,
-          "time": "2025-12-30 12:58:53.483"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8202,
-          "important": false,
-          "monitor_id": 1,
-          "msg": "200 - OK",
-          "ping": 12,
-          "status": 1,
-          "time": "2025-12-30 12:59:53.509"
-        },
         {
           "down_count": 0,
           "duration": 60,
@@ -1108,6 +1053,61 @@
           "ping": 11,
           "status": 1,
           "time": "2025-12-30 14:34:55.688"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8491,
+          "important": false,
+          "monitor_id": 1,
+          "msg": "200 - OK",
+          "ping": 8,
+          "status": 1,
+          "time": "2025-12-30 14:35:55.708"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8494,
+          "important": false,
+          "monitor_id": 1,
+          "msg": "200 - OK",
+          "ping": 12,
+          "status": 1,
+          "time": "2025-12-30 14:36:55.724"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8497,
+          "important": false,
+          "monitor_id": 1,
+          "msg": "200 - OK",
+          "ping": 10,
+          "status": 1,
+          "time": "2025-12-30 14:37:55.745"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8500,
+          "important": false,
+          "monitor_id": 1,
+          "msg": "200 - OK",
+          "ping": 10,
+          "status": 1,
+          "time": "2025-12-30 14:38:55.762"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8503,
+          "important": false,
+          "monitor_id": 1,
+          "msg": "200 - OK",
+          "ping": 11,
+          "status": 1,
+          "time": "2025-12-30 14:39:55.777"
         }
       ],
       "count": 100,
@@ -1120,61 +1120,6 @@
     },
     "2": {
       "beats": [
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8191,
-          "important": false,
-          "monitor_id": 2,
-          "msg": "200 - OK",
-          "ping": 10,
-          "status": 1,
-          "time": "2025-12-30 12:55:53.430"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8194,
-          "important": false,
-          "monitor_id": 2,
-          "msg": "200 - OK",
-          "ping": 11,
-          "status": 1,
-          "time": "2025-12-30 12:56:53.450"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8197,
-          "important": false,
-          "monitor_id": 2,
-          "msg": "200 - OK",
-          "ping": 12,
-          "status": 1,
-          "time": "2025-12-30 12:57:53.473"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8200,
-          "important": false,
-          "monitor_id": 2,
-          "msg": "200 - OK",
-          "ping": 14,
-          "status": 1,
-          "time": "2025-12-30 12:58:53.495"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8203,
-          "important": false,
-          "monitor_id": 2,
-          "msg": "200 - OK",
-          "ping": 11,
-          "status": 1,
-          "time": "2025-12-30 12:59:53.520"
-        },
         {
           "down_count": 0,
           "duration": 60,
@@ -2219,6 +2164,61 @@
           "ping": 11,
           "status": 1,
           "time": "2025-12-30 14:34:55.671"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8490,
+          "important": false,
+          "monitor_id": 2,
+          "msg": "200 - OK",
+          "ping": 12,
+          "status": 1,
+          "time": "2025-12-30 14:35:55.688"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8493,
+          "important": false,
+          "monitor_id": 2,
+          "msg": "200 - OK",
+          "ping": 13,
+          "status": 1,
+          "time": "2025-12-30 14:36:55.707"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8496,
+          "important": false,
+          "monitor_id": 2,
+          "msg": "200 - OK",
+          "ping": 15,
+          "status": 1,
+          "time": "2025-12-30 14:37:55.725"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8499,
+          "important": false,
+          "monitor_id": 2,
+          "msg": "200 - OK",
+          "ping": 12,
+          "status": 1,
+          "time": "2025-12-30 14:38:55.745"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8502,
+          "important": false,
+          "monitor_id": 2,
+          "msg": "200 - OK",
+          "ping": 11,
+          "status": 1,
+          "time": "2025-12-30 14:39:55.760"
         }
       ],
       "count": 100,
@@ -2231,61 +2231,6 @@
     },
     "3": {
       "beats": [
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8192,
-          "important": false,
-          "monitor_id": 3,
-          "msg": "200 - OK",
-          "ping": 11,
-          "status": 1,
-          "time": "2025-12-30 12:55:53.466"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8195,
-          "important": false,
-          "monitor_id": 3,
-          "msg": "200 - OK",
-          "ping": 10,
-          "status": 1,
-          "time": "2025-12-30 12:56:53.482"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8198,
-          "important": false,
-          "monitor_id": 3,
-          "msg": "200 - OK",
-          "ping": 10,
-          "status": 1,
-          "time": "2025-12-30 12:57:53.497"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8201,
-          "important": false,
-          "monitor_id": 3,
-          "msg": "200 - OK",
-          "ping": 10,
-          "status": 1,
-          "time": "2025-12-30 12:58:53.511"
-        },
-        {
-          "down_count": 0,
-          "duration": 60,
-          "id": 8204,
-          "important": false,
-          "monitor_id": 3,
-          "msg": "200 - OK",
-          "ping": 13,
-          "status": 1,
-          "time": "2025-12-30 12:59:53.537"
-        },
         {
           "down_count": 0,
           "duration": 60,
@@ -3330,6 +3275,61 @@
           "ping": 11,
           "status": 1,
           "time": "2025-12-30 14:34:55.708"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8492,
+          "important": false,
+          "monitor_id": 3,
+          "msg": "200 - OK",
+          "ping": 9,
+          "status": 1,
+          "time": "2025-12-30 14:35:55.728"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8495,
+          "important": false,
+          "monitor_id": 3,
+          "msg": "200 - OK",
+          "ping": 15,
+          "status": 1,
+          "time": "2025-12-30 14:36:55.742"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8498,
+          "important": false,
+          "monitor_id": 3,
+          "msg": "200 - OK",
+          "ping": 10,
+          "status": 1,
+          "time": "2025-12-30 14:37:55.768"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8501,
+          "important": false,
+          "monitor_id": 3,
+          "msg": "200 - OK",
+          "ping": 10,
+          "status": 1,
+          "time": "2025-12-30 14:38:55.782"
+        },
+        {
+          "down_count": 0,
+          "duration": 60,
+          "id": 8504,
+          "important": false,
+          "monitor_id": 3,
+          "msg": "200 - OK",
+          "ping": 10,
+          "status": 1,
+          "time": "2025-12-30 14:39:55.796"
         }
       ],
       "count": 100,
@@ -3341,7 +3341,7 @@
       }
     }
   },
-  "generated_at_utc": "2025-12-30T14:35:45.189651+00:00",
+  "generated_at_utc": "2025-12-30T14:40:46.191556+00:00",
   "heartbeats_total": 300,
   "kuma_url": "http://uptime-kuma:3001",
   "monitors_count": 3
