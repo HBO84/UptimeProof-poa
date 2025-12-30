@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>uptimeproof.io — Verify JSON</title>
+<style>
+:root{--bg:#070b14;--text:#e8eefc;--muted:#9fb0d0;--line:#1a2742;--ok:#18d56b;--warn:#f4b740;--bad:#ff4d4f;--chip:#101c33;--shadow:0 20px 50px rgba(0,0,0,.35);--r:18px;--r2:14px}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1000px 500px at 20% 0%,rgba(46,111,255,.18),transparent 60%),radial-gradient(900px 500px at 80% 20%,rgba(24,213,107,.12),transparent 60%),var(--bg);color:var(--text)}
+a{color:#b8c9ff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:26px 18px 54px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand h1{font-size:28px;margin:0}.brand .sub{margin-top:4px;color:var(--muted);font-size:14px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);color:var(--text);box-shadow:0 10px 25px rgba(0,0,0,.18);cursor:pointer}
+.btn:hover{background:rgba(255,255,255,.06)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;overflow:hidden}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.hr{height:1px;background:var(--line);margin:14px 0}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+pre{margin:0;padding:14px;border-radius:var(--r2);border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.20);overflow:auto;max-height:75vh;font-size:13px}
+.small{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <h1>uptimeproof.io — Verify (JSON)</h1>
+      <div class="sub">Raw output from <span class="mono">/poa/v1/verify</span> (single source).</div>
+    </div>
+    <div class="nav">
+      <a class="btn" href="./index.html">Status</a>
+      <a class="btn" href="./verify.html">Verify (page)</a>
+      <a class="btn" href="./verify-json.html">Verify (JSON)</a>
+      <a class="btn" href="./about.html">About</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div class="small">Endpoint: <span class="mono" id="ep">/poa/v1/verify</span></div>
+      <div class="nav">
+        <a class="btn" href="#" id="refreshBtn">Refresh</a>
+        <a class="btn" href="#" id="copyBtn">Copy JSON</a>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <pre id="out">Loading…</pre>
+    <div class="small" style="margin-top:12px">
+      If you see errors here, it is usually: API unreachable, reverse-proxy misroute, or browser blocked the request.
+    </div>
+  </div>
+</div>
+
+<script>
+const VERIFY_URL="/poa/v1/verify";
+
+async function fetchJson(url, timeoutMs=9000){
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(), timeoutMs);
+  try{
+    const res=await fetch(url,{signal:ctrl.signal,cache:"no-store"});
+    if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return await res.json();
+  } finally { clearTimeout(t); }
+}
+
+async function refresh(){
+  const pre=document.getElementById("out");
+  pre.textContent="Loading…";
+  try{
+    const j=await fetchJson(VERIFY_URL, 9000);
+    pre.textContent=JSON.stringify(j,null,2);
+  }catch(e){
+    pre.textContent=`ERROR: ${String(e)}\n\nTroubleshooting:\n- Is uptimeproof.io reaching the PoA API?\n- Does /poa/v1/verify return JSON in curl?\n- Check Caddy routing and container health.\n`;
+  }
+}
+
+document.getElementById("refreshBtn").addEventListener("click",(e)=>{e.preventDefault();refresh();});
+document.getElementById("copyBtn").addEventListener("click",async (e)=>{
+  e.preventDefault();
+  const txt=document.getElementById("out").textContent||"";
+  try{ await navigator.clipboard.writeText(txt); alert("Copied."); }
+  catch(_){ alert("Copy failed. Select text manually."); }
+});
+
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>

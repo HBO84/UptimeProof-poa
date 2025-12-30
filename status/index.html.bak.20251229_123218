@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>uptimeproof.io — Status</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 0; background: #0b0f14; color: #e6edf3; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 28px 18px; }
+    .card { background: #111826; border: 1px solid #223046; border-radius: 16px; padding: 16px; margin: 12px 0; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .kpi { flex: 1; min-width: 220px; }
+    .pill { display:inline-block; padding: 6px 10px; border-radius: 999px; font-weight: 700; }
+    .UP { background:#0f2; color:#041; }
+    .DEGRADED { background:#ff0; color:#440; }
+    .DOWN { background:#f33; color:#200; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { text-align:left; padding: 10px 8px; border-bottom: 1px solid #223046; }
+    .muted { color:#9fb0c0; font-size: 13px; }
+    code { background:#0b1220; padding: 2px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div>
+          <div style="font-size:20px; font-weight:800;">uptimeproof.io — Proof of Availability</div>
+          <div class="muted">Public read-only status page</div>
+        </div>
+        <div>
+          <span id="pill" class="pill">LOADING</span>
+          <div class="muted" id="meta">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card kpi">
+        <div style="font-weight:800;">Uptime (Stable Era v1)</div>
+        <div id="stable_kpi" style="font-size:28px; font-weight:900; margin-top:8px;">—</div>
+        <div class="muted" id="stable_since">—</div>
+      </div>
+      <div class="card kpi">
+        <div style="font-weight:800;">Uptime (Genesis)</div>
+        <div id="genesis_kpi" style="font-size:28px; font-weight:900; margin-top:8px;">—</div>
+        <div class="muted" id="genesis_since">—</div>
+      </div>
+      <div class="card kpi">
+        <div style="font-weight:800;">Proof</div>
+        <div class="muted" style="margin-top:8px;">status_hash</div>
+        <div><code id="status_hash">—</code></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:900; margin-bottom:10px;">Services</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Status</th><th>Last heartbeat</th><th>Latency</th><th>Message</th>
+          </tr>
+        </thead>
+        <tbody id="services">
+          <tr><td colspan="5" class="muted">Loading…</td></tr>
+        </tbody>
+      </table>
+      <div class="muted" style="margin-top:10px;">
+        Data source: <code>/poa/v1/status</code> • Version: <code>public-page-v1</code>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const fmtPct = (x) => (typeof x === "number" ? x.toFixed(4).replace(/\.?0+$/,'') + "%" : "—");
+  const fmtLatency = (x) => (typeof x === "number" ? x + " ms" : "—");
+  const shortTs = (iso) => iso ? iso.replace('T',' ').replace('Z',' UTC') : "—";
+
+  function setPill(status) {
+    const pill = document.getElementById('pill');
+    pill.textContent = status || "UNKNOWN";
+    pill.className = "pill " + (status || "");
+  }
+
+  async function load() {
+    try {
+      const res = await fetch("/poa/v1/status", { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+
+      setPill(data.overall_status);
+      document.getElementById('meta').textContent =
+        `PoA ID: ${data.poa_id} • Updated: ${shortTs(data.generated_at)}`;
+
+      const st = data.uptime?.stable_era_v1 || {};
+      const ge = data.uptime?.genesis || {};
+
+      document.getElementById('stable_kpi').textContent = fmtPct(st.uptime_30d);
+      document.getElementById('stable_since').textContent = "Since: " + shortTs(st.since);
+
+      document.getElementById('genesis_kpi').textContent = fmtPct(ge.uptime_30d);
+      document.getElementById('genesis_since').textContent = "Since: " + shortTs(ge.since);
+
+      document.getElementById('status_hash').textContent = data.proof?.status_hash || "—";
+
+      const tbody = document.getElementById('services');
+      tbody.innerHTML = "";
+      (data.services || []).forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${s.name || s.id}</td>
+          <td><span class="pill ${s.status}">${s.status}</span></td>
+          <td class="muted">${shortTs(s.last_heartbeat)}</td>
+          <td class="muted">${fmtLatency(s.latency_ms)}</td>
+          <td class="muted">${(s.msg || "").slice(0,120)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+    } catch (e) {
+      setPill("DOWN");
+      document.getElementById('meta').textContent = "Failed to load /poa/v1/status";
+      const tbody = document.getElementById('services');
+      tbody.innerHTML = `<tr><td colspan="5" class="muted">Error: ${String(e)}</td></tr>`;
+    }
+  }
+
+  load();
+  setInterval(load, 8000);
+</script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>uptimeproof.io — Status</title>
+<style>
+:root{
+  --bg:#070b14;--text:#e8eefc;--muted:#9fb0d0;--line:#1a2742;
+  --ok:#18d56b;--warn:#f4b740;--bad:#ff4d4f;--chip:#101c33;
+  --shadow:0 20px 50px rgba(0,0,0,.35);--r:18px;--r2:14px;
+}
+*{box-sizing:border-box}html,body{height:100%}
+body{
+  margin:0;
+  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:
+    radial-gradient(1000px 500px at 20% 0%,rgba(46,111,255,.18),transparent 60%),
+    radial-gradient(900px 500px at 80% 20%,rgba(24,213,107,.12),transparent 60%),
+    var(--bg);
+  color:var(--text)
+}
+a{color:#b8c9ff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:26px 18px 54px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand h1{font-size:28px;margin:0}
+.brand .sub{margin-top:4px;color:var(--muted);font-size:14px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 14px;border:1px solid var(--line);
+  border-radius:999px;background:rgba(255,255,255,.03);
+  color:var(--text);box-shadow:0 10px 25px rgba(0,0,0,.18);
+  cursor:pointer
+}
+.btn:hover{background:rgba(255,255,255,.06)}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:920px){.grid.cols-2{grid-template-columns:1fr 1fr}}
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+  border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:18px;overflow:hidden
+}
+.card h2{margin:0 0 10px 0;font-size:18px}
+.small{color:var(--muted);font-size:13px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.badge{
+  display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;
+  font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04)
+}
+.badge.ok{background:rgba(24,213,107,.12);color:#bff5d3;border-color:rgba(24,213,107,.22)}
+.badge.bad{background:rgba(255,77,79,.10);color:#ffd0d0;border-color:rgba(255,77,79,.25)}
+.badge.warn{background:rgba(244,183,64,.12);color:#ffe6b5;border-color:rgba(244,183,64,.25)}
+.hr{height:1px;background:var(--line);margin:14px 0}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:8px 12px;margin-top:10px}
+.kv .k{color:var(--muted);font-size:13px}
+.kv .v{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all}
+.table{width:100%;border-collapse:collapse;border-radius:var(--r2);overflow:hidden}
+.table th,.table td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
+.table th{color:var(--muted);font-weight:700;background:rgba(0,0,0,.12)}
+.pill{
+  display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;
+  background:var(--chip);border:1px solid rgba(255,255,255,.06);
+  color:var(--muted);font-size:12px;gap:8px
+}
+.dot{width:10px;height:10px;border-radius:999px;display:inline-block;background:var(--muted)}
+.dot.ok{background:var(--ok)}.dot.bad{background:var(--bad)}.dot.warn{background:var(--warn)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+pre{
+  margin:0;padding:14px;border-radius:var(--r2);
+  border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.20);
+  overflow:auto;max-height:520px;font-size:13px
+}
+.note{color:var(--muted);font-size:13px;line-height:1.45}
+.footer{margin-top:18px;color:var(--muted);font-size:13px}
+.warnline{margin-top:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <h1>uptimeproof.io — Status</h1>
+      <div class="sub">Public Proof of Availability (PoA) status — DNS anchored & verifiable.</div>
+    </div>
+    <div class="nav">
+      <a class="btn" href="./index.html">Status</a>
+      <a class="btn" href="./verify.html">Verify (page)</a>
+      <a class="btn" href="./verify-json.html">Verify (JSON)</a>
+      <a class="btn" href="./about.html">About</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <h2 style="margin-bottom:2px">Verification</h2>
+        <div class="small">Single source of truth: <span class="mono">/poa/v1/verify</span></div>
+      </div>
+      <span id="verifyBadge" class="badge warn">LOADING</span>
+    </div>
+    <div class="hr"></div>
+    <div class="note" id="verifyNote">Fetching…</div>
+    <div class="note warnline" id="staleLine" style="display:none;"></div>
+  </div>
+
+  <div class="grid cols-2" style="margin-top:14px">
+    <div class="card">
+      <div class="row"><h2 style="margin:0">Overall</h2><span id="overallBadge" class="badge warn">—</span></div>
+      <div class="small" style="margin-top:8px">Generated at <span id="generatedAt" class="mono">—</span></div>
+      <div class="small">Last successful refresh: <span id="lastOkAt" class="mono">—</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><h2 style="margin:0">Anchored proof</h2><span class="pill"><span class="dot ok"></span>DNS anchor</span></div>
+      <div class="mono" style="margin-top:10px;word-break:break-all" id="anchoredHash">—</div>
+      <div style="margin-top:10px" class="small">
+        <span class="mono" id="anchoredFile">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="row"><h2 style="margin:0">Chain (anti-rollback)</h2><span id="chainBadge" class="badge warn">—</span></div>
+    <div class="small" style="margin-top:8px">
+      Each export includes a <span class="mono">_poa</span> header linking to the previous export (<span class="mono">prev_file</span> + <span class="mono">prev_sha256</span>).
+      This prevents silently swapping history (“rollback”).
+    </div>
+    <div class="kv">
+      <div class="k">Head file</div><div class="v" id="headFile">—</div>
+      <div class="k">Head sha256</div><div class="v" id="headSha">—</div>
+      <div class="k">Head timestamp</div><div class="v" id="headTs">—</div>
+      <div class="k">Sequence</div><div class="v" id="headSeq">—</div>
+      <div class="k">Prev file</div><div class="v" id="prevFile">—</div>
+      <div class="k">Prev sha256</div><div class="v" id="prevSha">—</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="row"><h2 style="margin:0">Checks</h2><span class="pill"><span id="apiDot" class="dot warn"></span><span id="apiLabel">API</span></span></div>
+    <table class="table" style="margin-top:12px">
+      <thead><tr><th>Status</th><th>Check</th><th>Detail</th></tr></thead>
+      <tbody id="checksBody">
+        <tr><td><span class="pill"><span class="dot warn"></span>…</span></td><td>Loading</td><td class="mono">—</td></tr>
+      </tbody>
+    </table>
+    <div class="footer">
+      This page never flips to DOWN on temporary network errors. It keeps the last known-good verifier output.
+    </div>
+  </div>
+</div>
+
+<script>
+const VERIFY_URL = "/poa/v1/verify";
+const POLL_MS = 30000;
+const STALE_AFTER_MS = 90000; // show "STALE" if no successful refresh for > 90s
+const LS_KEY = "uptimeproof_last_verify_v1";
+
+function nowIso(){ return new Date().toISOString(); }
+
+async function fetchJson(url, timeoutMs=9000){
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), timeoutMs);
+  try{
+    const res = await fetch(url, {signal: ctrl.signal, cache: "no-store"});
+    if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return await res.json();
+  } finally { clearTimeout(t); }
+}
+
+function setText(id, txt){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = (txt===undefined || txt===null || txt==="") ? "—" : String(txt);
+}
+function setBadge(id, kind, label){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.remove("ok","bad","warn");
+  el.classList.add(kind);
+  el.textContent = label;
+}
+function dotKind(kind){
+  return kind==="ok"?"ok":(kind==="bad"?"bad":"warn");
+}
+function norm(v){
+  if(v===true) return {k:"ok", l:"OK"};
+  if(v===false) return {k:"bad", l:"FAIL"};
+  if(typeof v==="string"){
+    const s=v.toLowerCase();
+    if(s.includes("ok")||s.includes("up")||s.includes("pass")) return {k:"ok", l:"OK"};
+    if(s.includes("fail")||s.includes("down")||s.includes("bad")) return {k:"bad", l:"FAIL"};
+    if(s.includes("warn")||s.includes("skip")) return {k:"warn", l:v.toUpperCase()};
+    return {k:"warn", l:v};
+  }
+  if(v===undefined || v===null) return {k:"warn", l:"UNKNOWN"};
+  return {k:"warn", l:String(v)};
+}
+function pick(obj, paths){
+  for(const p of paths){
+    let cur=obj, ok=true;
+    for(const part of p.split(".")){
+      if(cur && Object.prototype.hasOwnProperty.call(cur, part)) cur=cur[part];
+      else { ok=false; break; }
+    }
+    if(ok && cur!==undefined) return cur;
+  }
+  return undefined;
+}
+
+function loadCached(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(_){ return null; }
+}
+function saveCached(payload){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(payload)); }catch(_){}
+}
+
+const state = {
+  lastOkAt: null,
+  lastVerify: null
+};
+
+function updateStaleUI(){
+  const staleLine = document.getElementById("staleLine");
+  if(!staleLine) return;
+  if(!state.lastOkAt){
+    staleLine.style.display = "none";
+    return;
+  }
+  const age = Date.now() - new Date(state.lastOkAt).getTime();
+  if(age > STALE_AFTER_MS){
+    staleLine.style.display = "";
+    staleLine.textContent = `STALE: last successful refresh was ${state.lastOkAt} (age ${(age/1000).toFixed(0)}s)`;
+  }else{
+    staleLine.style.display = "none";
+  }
+}
+
+function renderFromVerify(j){
+  state.lastVerify = j;
+
+  // --- verdict
+  const verdictRaw = (j && (j.verdict ?? j.ok)) ?? "UNKNOWN";
+  const v = norm(verdictRaw);
+  setBadge("verifyBadge", v.k, `VERIFY: ${v.l}`);
+  setBadge("overallBadge", v.k, v.k==="ok" ? "UP" : (v.k==="bad" ? "DOWN" : "UNKNOWN"));
+
+  // --- timestamps (IMPORTANT: generatedAt = verify.ts ; headTs = latest.ts)
+  setText("generatedAt", j?.ts || "—");
+
+  // --- anchored proof (DNS)
+  const dns = j?.dns_anchor?.dns || {};
+  setText("anchoredHash", dns.sha256 || "—");
+  setText("anchoredFile", dns.file || "—");
+
+  // --- chain (anti-rollback)
+  const chain = j?.chain || {};
+  const chainStatus = (chain.status || "UNKNOWN").toUpperCase();
+  const chainKind = chainStatus==="OK" ? "ok" : (chainStatus==="FAIL" ? "bad" : "warn");
+  setBadge("chainBadge", chainKind, `CHAIN: ${chainStatus}`);
+
+  // head display: prefer chain fields; fallback to latest
+  const latest = j?.latest || {};
+  setText("headFile", chain.head_file || latest.file || "—");
+  setText("headSha", chain.head_sha256 || latest.sha256 || "—");
+  setText("headTs", latest.ts || "—");
+  setText("headSeq", chain.sequence ?? latest.sequence ?? "—");
+  setText("prevFile", chain.prev_file || "—");
+  setText("prevSha", chain.prev_sha256 || "—");
+
+  // --- note
+  const headOk = (dns.sha256 && latest.sha256) ? (String(dns.sha256).toLowerCase() === String(latest.sha256).toLowerCase()) : null;
+  const dnsOk  = (j?.dns_anchor?.matched_sha256 && dns.sha256) ? (String(j.dns_anchor.matched_sha256).toLowerCase() === String(dns.sha256).toLowerCase()) : null;
+
+  let note = "";
+  if(v.k==="ok"){
+    note = `OK — DNS is anchored to head. (${latest.file || "—"})`;
+  }else{
+    note = `Verifier returned ${chainStatus}. Open Verify (JSON) for details.`;
+  }
+  setText("verifyNote", note);
+
+  // --- API dot
+  const apiDot = document.getElementById("apiDot");
+  const apiLabel = document.getElementById("apiLabel");
+  if(apiDot){
+    apiDot.classList.remove("ok","bad","warn");
+    apiDot.classList.add("ok");
+  }
+  if(apiLabel) apiLabel.textContent = "API";
+
+  // --- checks table
+  const rows = [];
+  function addRow(kind, title, detail){
+    const dot = kind==="ok" ? "ok" : (kind==="bad" ? "bad" : "warn");
+    const label = kind==="ok" ? "OK" : (kind==="bad" ? "FAIL" : "UNKNOWN");
+    rows.push(`
+      <tr>
+        <td><span class="pill"><span class="dot ${dot}"></span>${label}</span></td>
+        <td>${title}</td>
+        <td class="mono">${detail || "—"}</td>
+      </tr>
+    `);
+  }
+
+  // 1) Latest head exists
+  addRow(
+    latest.file && latest.sha256 ? "ok" : "bad",
+    "Head (latest.json)",
+    `${latest.file || "—"} | ${latest.sha256 || "—"}`
+  );
+
+  // 2) DNS points to head sha
+  addRow(
+    headOk===true ? "ok" : (headOk===false ? "bad" : "warn"),
+    "DNS → Head hash match",
+    headOk===null ? "missing data" : (headOk ? "DNS SHA == latest SHA" : "DNS SHA != latest SHA")
+  );
+
+  // 3) DNS matched file sha
+  addRow(
+    dnsOk===true ? "ok" : (dnsOk===false ? "bad" : "warn"),
+    "DNS matched file SHA",
+    dnsOk===null ? "missing data" : (dnsOk ? "matched_sha == dns_sha" : "matched_sha != dns_sha")
+  );
+
+  // 4) Chain status
+  addRow(
+    chainStatus==="OK" ? "ok" : (chainStatus==="FAIL" ? "bad" : "warn"),
+    "Chain (anti-rollback)",
+    `status=${chainStatus} seq=${chain.sequence ?? "—"} prev=${chain.prev_file ?? "—"}`
+  );
+
+  // 5) Prev link integrity (if present)
+  const prevOK = (chain.prev_exists===true && chain.prev_sha256_matches===true);
+  const prevHas = (chain.prev_file || chain.prev_sha256);
+  addRow(
+    !prevHas ? "warn" : (prevOK ? "ok" : "bad"),
+    "Prev link check",
+    !prevHas ? "no prev (bootstrap/unknown)" : `prev_exists=${chain.prev_exists} sha_match=${chain.prev_sha256_matches}`
+  );
+
+  const tb = document.getElementById("checksBody");
+  if(tb) tb.innerHTML = rows.join("");
+
+  // last ok timestamp for "sticky UP" logic
+  state.lastOkAt = nowIso();
+  setText("lastOkAt", state.lastOkAt);
+  updateStaleUI();
+}
+
+
+async function poll(){
+  // 1) Load cached immediately (fast first paint)
+  if(!state.lastVerify){
+    const cached = loadCached();
+    if(cached && cached.payload){
+      state.lastVerify = cached.payload;
+      state.lastOkAt = cached.lastOkAt || null;
+      renderFromVerify(state.lastVerify);
+      updateStaleUI();
+    }
+  }
+
+  // 2) Live refresh
+  try{
+    const j = await fetchJson(VERIFY_URL, 9000);
+    state.lastOkAt = nowIso();
+    saveCached({lastOkAt: state.lastOkAt, payload: j});
+    renderFromVerify(j);
+
+    // api indicator reflects *this page's ability to hit verifier* (single source)
+    const apiDot = document.getElementById("apiDot");
+    if(apiDot){ apiDot.classList.remove("ok","bad","warn"); apiDot.classList.add("ok"); }
+    setText("apiLabel", "API UP");
+  }catch(e){
+    // DO NOT flip to DOWN. Mark warn, keep last OK payload visible.
+    setBadge("verifyBadge","warn","VERIFY: WARN");
+    setText("verifyNote", `Verifier unreachable: ${String(e)}`);
+    const apiDot = document.getElementById("apiDot");
+    if(apiDot){ apiDot.classList.remove("ok","bad","warn"); apiDot.classList.add("warn"); }
+    setText("apiLabel", "API WARN");
+  }
+  updateStaleUI();
+}
+
+poll();
+setInterval(poll, POLL_MS);
+setInterval(updateStaleUI, 1000);
+</script>
+</body>
+</html>

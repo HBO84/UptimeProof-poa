@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>uptimeproof.io — Verify</title>
+<style>
+:root{--bg:#070b14;--text:#e8eefc;--muted:#9fb0d0;--line:#1a2742;--ok:#18d56b;--warn:#f4b740;--bad:#ff4d4f;--chip:#101c33;--shadow:0 20px 50px rgba(0,0,0,.35);--r:18px;--r2:14px}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1000px 500px at 20% 0%,rgba(46,111,255,.18),transparent 60%),radial-gradient(900px 500px at 80% 20%,rgba(24,213,107,.12),transparent 60%),var(--bg);color:var(--text)}
+a{color:#b8c9ff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:26px 18px 54px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand h1{font-size:28px;margin:0}.brand .sub{margin-top:4px;color:var(--muted);font-size:14px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);color:var(--text);box-shadow:0 10px 25px rgba(0,0,0,.18);cursor:pointer}
+.btn:hover{background:rgba(255,255,255,.06)}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:920px){.grid.cols-2{grid-template-columns:1fr 1fr}}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;overflow:hidden}
+.card h2{margin:0 0 10px 0;font-size:18px}
+.small{color:var(--muted);font-size:13px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04)}
+.badge.ok{background:rgba(24,213,107,.12);color:#bff5d3;border-color:rgba(24,213,107,.22)}
+.badge.bad{background:rgba(255,77,79,.10);color:#ffd0d0;border-color:rgba(255,77,79,.25)}
+.badge.warn{background:rgba(244,183,64,.12);color:#ffe6b5;border-color:rgba(244,183,64,.25)}
+.hr{height:1px;background:var(--line);margin:14px 0}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:8px 12px;margin-top:10px}
+.kv .k{color:var(--muted);font-size:13px}.kv .v{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+pre{margin:0;padding:14px;border-radius:var(--r2);border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.20);overflow:auto;max-height:520px;font-size:13px}
+.note{color:var(--muted);font-size:13px;line-height:1.45}
+.callout{padding:12px 14px;border:1px solid rgba(255,255,255,.08);border-radius:var(--r2);background:rgba(0,0,0,.18)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <h1>uptimeproof.io — Verify</h1>
+      <div class="sub">Step-by-step verification. Single source: <span class="mono">/poa/v1/verify</span></div>
+    </div>
+    <div class="nav">
+      <a class="btn" href="./index.html">Status</a>
+      <a class="btn" href="./verify.html">Verify (page)</a>
+      <a class="btn" href="./verify-json.html">Verify (JSON)</a>
+      <a class="btn" href="./about.html">About</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <h2 style="margin-bottom:2px">Anchored proof (live)</h2>
+        <div class="small">This is what an independent verifier should match.</div>
+      </div>
+      <span id="anchorBadge" class="badge warn">LOADING</span>
+    </div>
+
+    <div class="kv">
+      <div class="k">DNS TXT (raw)</div><div class="v" id="dnsRaw">—</div>
+      <div class="k">File</div><div class="v" id="dnsFile">—</div>
+      <div class="k">SHA256</div><div class="v" id="dnsSha">—</div>
+      <div class="k">Timestamp</div><div class="v" id="dnsTs">—</div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="callout note">
+      <b>What to check:</b><br/>
+      1) Read DNS TXT <span class="mono">_poa.uptimeproof.io</span><br/>
+      2) Download the referenced file (or the bundle that contains it)<br/>
+      3) Compute SHA256 locally — it must match DNS<br/>
+      4) Verify the anti-rollback chain (<span class="mono">_poa.prev_file</span> / <span class="mono">_poa.prev_sha256</span>)
+    </div>
+  </div>
+
+  <div class="grid cols-2" style="margin-top:14px">
+    <div class="card">
+      <h2>1) Read DNS (authoritative)</h2>
+      <div class="hr"></div>
+      <pre>dig @ns1.dns-parking.com TXT _poa.uptimeproof.io +short
+dig @ns2.dns-parking.com TXT _poa.uptimeproof.io +short</pre>
+      <div class="note" style="margin-top:10px">
+        You should see: <span class="mono">TS=...;SHA256=...;FILE=...</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>2) Download proof bundle (if published)</h2>
+      <div class="hr"></div>
+      <pre>curl -fsS https://uptimeproof.io/proof/bundle/latest -o bundle.tar.gz
+tar -xzf bundle.tar.gz</pre>
+      <div class="note" style="margin-top:10px">
+        The referenced <span class="mono">FILE=...</span> must exist inside the extracted bundle.
+      </div>
+    </div>
+  </div>
+
+  <div class="grid cols-2" style="margin-top:14px">
+    <div class="card">
+      <h2>3) Verify the SHA256</h2>
+      <div class="hr"></div>
+      <pre>sha256sum heartbeats_YYYYMMDD_HHMMSS.json</pre>
+      <div class="note" style="margin-top:10px">
+        Compare your result with <span class="mono">SHA256=...</span> from DNS.
+      </div>
+    </div>
+    <div class="card">
+      <h2>4) Verify the chain</h2>
+      <div class="hr"></div>
+      <pre># Check live verifier JSON:
+curl -fsS https://uptimeproof.io/poa/v1/verify | jq .
+
+# Offline verifier (example):
+python poa_verify_full.py --chain</pre>
+      <div class="note" style="margin-top:10px">
+        The chain passes if each file’s <span class="mono">_poa.prev_sha256</span> matches the computed SHA256 of the previous file.
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="row">
+      <h2 style="margin:0">Live verifier output</h2>
+      <a class="btn" href="./verify-json.html">Open JSON</a>
+    </div>
+    <div class="hr"></div>
+    <pre id="rawJson">Loading…</pre>
+  </div>
+</div>
+
+<script>
+const VERIFY_URL="/poa/v1/verify";
+
+async function fetchJson(url, timeoutMs=9000){
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(), timeoutMs);
+  try{
+    const res=await fetch(url,{signal:ctrl.signal,cache:"no-store"});
+    if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return await res.json();
+  } finally { clearTimeout(t); }
+}
+function setText(id, txt){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=(txt===undefined||txt===null||txt==="")?"—":String(txt);
+}
+function setBadge(id, kind, label){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.classList.remove("ok","bad","warn");
+  el.classList.add(kind);
+  el.textContent=label;
+}
+function norm(v){
+  if(v===true) return {k:"ok",l:"OK"};
+  if(v===false) return {k:"bad",l:"FAIL"};
+  if(typeof v==="string"){
+    const s=v.toLowerCase();
+    if(s.includes("ok")||s.includes("up")||s.includes("pass")) return {k:"ok",l:"OK"};
+    if(s.includes("fail")||s.includes("down")||s.includes("bad")) return {k:"bad",l:"FAIL"};
+    if(s.includes("warn")||s.includes("skip")) return {k:"warn",l:v.toUpperCase()};
+    return {k:"warn",l:v};
+  }
+  return {k:"warn",l:"UNKNOWN"};
+}
+function pick(obj, paths){
+  for(const p of paths){
+    let cur=obj, ok=true;
+    for(const part of p.split(".")){
+      if(cur && Object.prototype.hasOwnProperty.call(cur, part)) cur=cur[part];
+      else { ok=false; break; }
+    }
+    if(ok && cur!==undefined) return cur;
+  }
+  return undefined;
+}
+
+async function load(){
+  try{
+    const j=await fetchJson(VERIFY_URL, 9000);
+
+    const raw = pick(j,["dns.raw","anchor.raw","anchored.raw"]) || pick(j,["dns.txt","dns"]) || "";
+    const file = pick(j,["dns.file","anchor.file","anchored.file","matched_file","head.file"]);
+    const sha  = pick(j,["dns.sha256","anchor.sha256","anchored.sha256","matched_sha256","head.sha256"]);
+    const ts   = pick(j,["dns.ts","anchor.ts","anchored.ts","head.ts"]);
+
+    setText("dnsRaw", raw);
+    setText("dnsFile", file);
+    setText("dnsSha", sha);
+    setText("dnsTs", ts);
+
+    const verdict = pick(j,["verdict","ok","result.verdict","summary.verdict"]);
+    const v = norm(verdict);
+    setBadge("anchorBadge", v.k, v.k==="ok" ? "ANCHOR OK" : (v.k==="bad" ? "ANCHOR FAIL" : "ANCHOR"));
+
+    document.getElementById("rawJson").textContent = JSON.stringify(j, null, 2);
+  }catch(e){
+    setBadge("anchorBadge","warn","UNREACHABLE");
+    document.getElementById("rawJson").textContent = `ERROR: ${String(e)}`;
+  }
+}
+load();
+</script>
+</body>
+</html>

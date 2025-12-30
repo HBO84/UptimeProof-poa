@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>uptimeproof.io — About</title>
+<style>
+:root{--bg:#070b14;--text:#e8eefc;--muted:#9fb0d0;--line:#1a2742;--ok:#18d56b;--warn:#f4b740;--bad:#ff4d4f;--chip:#101c33;--shadow:0 20px 50px rgba(0,0,0,.35);--r:18px;--r2:14px}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1000px 500px at 20% 0%,rgba(46,111,255,.18),transparent 60%),radial-gradient(900px 500px at 80% 20%,rgba(24,213,107,.12),transparent 60%),var(--bg);color:var(--text)}
+a{color:#b8c9ff;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:26px 18px 54px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand h1{font-size:28px;margin:0}.brand .sub{margin-top:4px;color:var(--muted);font-size:14px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);color:var(--text);box-shadow:0 10px 25px rgba(0,0,0,.18);cursor:pointer}
+.btn:hover{background:rgba(255,255,255,.06)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;overflow:hidden}
+.hr{height:1px;background:var(--line);margin:14px 0}
+.note{color:var(--muted);font-size:13px;line-height:1.55}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+pre{margin:0;padding:14px;border-radius:var(--r2);border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.20);overflow:auto;font-size:13px}
+ul{margin:10px 0 0 18px;color:var(--muted)}
+h2{margin:0 0 10px 0;font-size:18px}
+.small{color:var(--muted);font-size:13px}
+.kv{display:grid;grid-template-columns:220px 1fr;gap:8px 12px;margin-top:10px}
+.k{color:var(--muted);font-size:13px}
+.v{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <h1>uptimeproof.io — About</h1>
+      <div class="sub">Public Proof of Availability (PoA): DNS-anchored, verifiable exports, chained against rollback.</div>
+    </div>
+    <div class="nav">
+      <a class="btn" href="./index.html">Status</a>
+      <a class="btn" href="./verify.html">Verify (page)</a>
+      <a class="btn" href="./verify-json.html">Verify (JSON)</a>
+      <a class="btn" href="./about.html">About</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What this is</h2>
+    <div class="note">
+      UptimeProof PoA periodically produces “exports” (snapshots derived from monitoring data) and anchors the current head export
+      into DNS TXT at <span class="mono">_poa.uptimeproof.io</span>.
+      Each export can include a <span class="mono">_poa</span> header that links to the previous export (anti-rollback chain).
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Single public source</h2>
+    <div class="note">
+      All public pages here read from one endpoint only: <span class="mono">/poa/v1/verify</span>.
+      That endpoint is expected to include enough information to:
+      (1) parse DNS anchor, (2) match a local/public export, (3) report chain status.
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Expected verifier fields (typical)</h2>
+    <div class="note">
+      Your JSON may evolve, but these are common keys the UI will try to read:
+    </div>
+    <div class="kv">
+      <div class="k">verdict / ok</div><div class="v">overall result of verification</div>
+      <div class="k">dns.ts / dns.sha256 / dns.file</div><div class="v">DNS anchor values</div>
+      <div class="k">matched_file / matched_sha256</div><div class="v">matched export on disk/public bundle</div>
+      <div class="k">head.file / head.sha256 / head.ts</div><div class="v">chain head info</div>
+      <div class="k">head.prev_file / head.prev_sha256</div><div class="v">anti-rollback link</div>
+      <div class="k">chain.ok</div><div class="v">chain integrity status</div>
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Security & open-source</h2>
+    <div class="note">
+      Publishing the proof format + verifier code is good for trust and reproducibility.
+      It does <b>not</b> give attackers control over your service — as long as you never publish secrets.
+    </div>
+    <ul>
+      <li><b>Do not publish</b> DNS API tokens, private keys, SSH keys, passwords, or internal backups.</li>
+      <li>Publish only “safe” code: verifier, public specs, and examples with placeholders.</li>
+      <li>Use <span class="mono">.env.example</span> files with fake values and add real secrets to <span class="mono">.gitignore</span>.</li>
+    </ul>
+
+    <div class="hr"></div>
+
+    <h2>Public endpoints</h2>
+    <pre>/poa/v1/verify</pre>
+    <div class="small" style="margin-top:10px">
+      (Other endpoints may exist, but these pages intentionally trust only the verifier endpoint.)
+    </div>
+  </div>
+</div>
+</body>
+</html>
