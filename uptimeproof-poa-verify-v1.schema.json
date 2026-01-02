@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uptimeproof.io/schemas/uptimeproof-poa-verify-v1.schema.json",
+  "title": "UptimeProof PoA Verify Response (v1)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "ts",
+    "verdict",
+    "message",
+    "service",
+    "links",
+    "verification",
+    "proof",
+    "anchor"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "uptimeproof:poa-verify:v1"
+    },
+    "ts": {
+      "type": "string",
+      "description": "Response timestamp (UTC ISO8601)"
+    },
+    "now_utc": {
+      "type": "string",
+      "description": "Same as ts (UTC ISO8601)"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "FAIL"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "project",
+        "domain",
+        "environment",
+        "contact",
+        "branding"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "contact": {
+          "type": "string"
+        },
+        "branding": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "display_name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "status_ui",
+        "verify_json",
+        "about"
+      ],
+      "properties": {
+        "status_ui": {
+          "type": "string"
+        },
+        "verify_json": {
+          "type": "string"
+        },
+        "about": {
+          "type": "string"
+        }
+      }
+    },
+    "head": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ts": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sequence": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "mtime": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "dns_anchor": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "dns": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "ts": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "file": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "raw": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "matched_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "matched_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "mtime": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "chain": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "OK",
+            "FAIL",
+            "UNKNOWN"
+          ]
+        },
+        "head_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "head_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "head_timestamp": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sequence": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "prev_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prev_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "prev_exists": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "prev_sha256_matches": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "checks": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id",
+          "status",
+          "detail"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OK",
+              "WARN",
+              "FAIL",
+              "UNKNOWN"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "verdict",
+        "reason",
+        "checks"
+      ],
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "VALID",
+            "INVALID",
+            "EXPIRED"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "head_latest_json",
+            "dns_matches_head",
+            "dns_lag_ok",
+            "dns_matched_file_hash",
+            "chain_ok",
+            "not_expired"
+          ],
+          "properties": {
+            "head_latest_json": {
+              "type": "boolean"
+            },
+            "dns_matches_head": {
+              "type": "boolean"
+            },
+            "dns_lag_ok": {
+              "type": "boolean"
+            },
+            "dns_matched_file_hash": {
+              "type": "boolean"
+            },
+            "chain_ok": {
+              "type": "boolean"
+            },
+            "not_expired": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "ts",
+        "head",
+        "matched_file_sha256",
+        "proof_window_seconds",
+        "valid_until_utc"
+      ],
+      "properties": {
+        "ts": {
+          "type": "string"
+        },
+        "head": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "file",
+            "sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "matched_file_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "proof_window_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "valid_until_utc": {
+          "type": "string"
+        }
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "dns"
+      ],
+      "properties": {
+        "dns": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "file",
+            "sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    }
+  }
+}
