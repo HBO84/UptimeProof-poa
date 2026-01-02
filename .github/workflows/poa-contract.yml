@@ -1,0 +1,37 @@
+name: PoA API Contract
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "*/15 * * * *"   # toutes les 15 minutes (ajuste si tu veux)
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq curl
+
+      - name: Run verify_client.sh (recommended logic)
+        run: |
+          chmod +x api/verify_client.sh
+          api/verify_client.sh "https://uptimeproof.io/poa/v1/verify"
+
+      # Optionnel: validation JSON Schema (si tu veux)
+      - name: Schema validation (optional)
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install jsonschema
+          curl -fsS "https://uptimeproof.io/poa/v1/verify" -o /tmp/verify.json
+          python3 - <<'PY'
+          import json
+          from jsonschema import validate
+          schema = json.load(open("api/uptimeproof-poa-verify-v1.schema.json","r",encoding="utf-8"))
+          data   = json.load(open("/tmp/verify.json","r",encoding="utf-8"))
+          validate(instance=data, schema=schema)
+          print("OK: schema valid")
+          PY
