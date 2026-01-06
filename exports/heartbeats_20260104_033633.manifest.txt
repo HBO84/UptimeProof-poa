@@ -1,0 +1,7 @@
+UptimeProof PoA - Heartbeats Export
+generated_at_utc: 2026-01-04T03:36:33.323669+00:00
+kuma_url: http://uptime-kuma:3001
+monitors_count: 2
+heartbeats_total: 200
+sha256: 17f6caab9e1a726ad2037f55767a1b26bdd2c0ea51c76536a3f52a997657cc86
+file: heartbeats_20260104_033633.json

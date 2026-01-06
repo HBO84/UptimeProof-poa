@@ -1,0 +1,7 @@
+uptimeproof-manifest-v1
+ts=2026-01-06T01:16:24Z
+file=heartbeats_20260106_011624.json
+sha256=da27b2e2b613dc15707217bca3f4f165266a2e8dd69e3146395de6a2148f107a
+prev_file=heartbeats_20260105_214541.json
+prev_sha256=283427ccccdc05813994e9c490ecf85d9fec2a7b231380e524bb0bba34d0dc50
+source_ok=true

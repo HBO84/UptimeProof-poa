@@ -1,0 +1,55 @@
+{
+  "schema": "uptimeproof:poa-heartbeats:v1",
+  "generated_at_utc": "2026-01-04T21:35:13.043712Z",
+  "kuma_url": "http://uptime-kuma:3001",
+  "monitors_count": 2,
+  "heartbeats_total": 1,
+  "monitors": [
+    {
+      "id": 5,
+      "name": "PoA API Health",
+      "type": "http",
+      "active": true,
+      "url": "https://uptimeproof.io/poa/v1/healthz",
+      "hostname": null,
+      "port": null,
+      "interval": 60
+    },
+    {
+      "id": 6,
+      "name": "Verify Truth",
+      "type": "json-query",
+      "active": true,
+      "url": "https://uptimeproof.io/poa/v1/verify",
+      "hostname": null,
+      "port": null,
+      "interval": 60
+    }
+  ],
+  "data": {
+    "6": {
+      "monitor": {
+        "id": 6,
+        "name": "Verify Truth",
+        "type": "json-query",
+        "active": true,
+        "url": "https://uptimeproof.io/poa/v1/verify",
+        "hostname": null,
+        "port": null,
+        "interval": 60
+      },
+      "count": 1,
+      "beats": [
+        {
+          "monitorID": 6,
+          "status": 1,
+          "time": "2026-01-04 21:35:12.621",
+          "msg": "200 - OK, expected value is found",
+          "ping": 75,
+          "important": false,
+          "duration": 60
+        }
+      ]
+    }
+  }
+}

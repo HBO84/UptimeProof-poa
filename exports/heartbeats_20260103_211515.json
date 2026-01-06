@@ -1,0 +1,28 @@
+{
+  "generated_at_utc": "2026-01-03T21:15:15.542430+00:00",
+  "kuma_url": "http://uptime-kuma:3001",
+  "monitors_count": 2,
+  "heartbeats_total": 1,
+  "data": {
+    "5": {
+      "monitor": {
+        "id": 5,
+        "name": "PoA API Health",
+        "type": "MonitorType.HTTP",
+        "active": true
+      },
+      "count": 1,
+      "beats": [
+        {
+          "monitorID": 5,
+          "status": 1,
+          "time": "2026-01-03 21:15:15.096",
+          "msg": "200 - OK",
+          "ping": 12,
+          "important": false,
+          "duration": 60
+        }
+      ]
+    }
+  }
+}

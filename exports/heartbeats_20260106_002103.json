@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-01-06T00:21:03Z",
+  "monitors": [],
+  "raw": {
+    "heartbeatList": {},
+    "uptimeList": {}
+  },
+  "schema": "uptimeproof:poa-heartbeats:v1",
+  "source": {
+    "error": null,
+    "kuma_url": "http://uptime-kuma:3001",
+    "ok": true,
+    "statuspage_api": "http://uptime-kuma:3001/api/status-page/heartbeat/public",
+    "statuspage_slug": "public",
+    "type": "uptime-kuma"
+  },
+  "summary": {
+    "monitors_count": 0
+  }
+}
