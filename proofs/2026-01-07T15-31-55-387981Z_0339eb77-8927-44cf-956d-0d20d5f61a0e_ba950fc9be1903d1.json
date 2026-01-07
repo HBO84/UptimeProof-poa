@@ -1,0 +1,12 @@
+{
+  "integrity_hash": "f300ea4f0823376c3b6c0fe84833667def4b9a3a7397281067bd286d0e5b8ad4",
+  "master_location": "Paris-VPS",
+  "proof_id": "0339eb77-8927-44cf-956d-0d20d5f61a0e_ba950fc9be1903d1",
+  "signature": {
+    "algorithm": "ed25519",
+    "message": "Private key not configured",
+    "status": "not_configured"
+  },
+  "timestamp": "2026-01-07T15:31:55.387981Z",
+  "version": "1.0.0"
+}
