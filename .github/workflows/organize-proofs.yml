@@ -1,0 +1,118 @@
+name: Organize Proofs by Date
+
+on:
+  schedule:
+    # Exécute chaque jour à 2h00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:  # Permet l'exécution manuelle
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Récupérer tout l'historique
+    
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+    
+      - name: Organize proofs by date
+        run: |
+          python3 << 'PYEOF'
+          import json
+          import os
+          from pathlib import Path
+          from datetime import datetime
+          import shutil
+          
+          proofs_dir = Path("proofs")
+          if not proofs_dir.exists():
+              print("No proofs directory found")
+              exit(0)
+          
+          # Parcourir tous les fichiers JSON dans proofs/
+          proof_files = list(proofs_dir.glob("*.json"))
+          
+          if not proof_files:
+              print("No proof files found")
+              exit(0)
+          
+          moved_count = 0
+          
+          for proof_file in proof_files:
+              try:
+                  # Lire le fichier pour extraire la date
+                  with open(proof_file, 'r', encoding='utf-8') as f:
+                      data = json.load(f)
+                  
+                  # Extraire la date depuis timestamp
+                  timestamp = data.get("timestamp", "")
+                  if not timestamp:
+                      # Essayer d'extraire depuis le nom de fichier
+                      # Format: YYYY-MM-DDTHH-MM-SS-...
+                      parts = proof_file.stem.split("_")[0].split("T")[0].split("-")
+                      if len(parts) >= 3:
+                          year, month, day = parts[0], parts[1], parts[2]
+                      else:
+                          continue
+                  else:
+                      # Parser le timestamp ISO 8601
+                      try:
+                          dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                          year = dt.strftime("%Y")
+                          month = dt.strftime("%m")
+                          day = dt.strftime("%d")
+                      except Exception:
+                          continue
+                  
+                  # Créer le répertoire de destination: proofs/YYYY/MM/DD/
+                  dest_dir = proofs_dir / year / month / day
+                  dest_dir.mkdir(parents=True, exist_ok=True)
+                  
+                  # Déplacer le fichier
+                  dest_file = dest_dir / proof_file.name
+                  
+                  if dest_file.exists():
+                      # Fichier déjà déplacé, skip
+                      continue
+                  
+                  shutil.move(str(proof_file), str(dest_file))
+                  moved_count += 1
+                  
+              except Exception as e:
+                  print(f"Error processing {proof_file.name}: {e}")
+                  continue
+          
+          print(f"Moved {moved_count} proof files to date-organized directories")
+          
+          # Commit les changements
+          if moved_count > 0:
+              import subprocess
+              
+              subprocess.run(["git", "config", "user.name", "GitHub Actions"], check=True)
+              subprocess.run(["git", "config", "user.email", "actions@github.com"], check=True)
+              
+              subprocess.run(["git", "add", "-A"], check=True)
+              subprocess.run(
+                  ["git", "commit", "-m", f"Organize proofs: Moved {moved_count} files by date"],
+                  check=True
+              )
+              subprocess.run(["git", "push"], check=True)
+              
+              print(f"✓ Committed and pushed organization of {moved_count} files")
+          else:
+              print("No files to organize")
+          PYEOF
+    
+      - name: Summary
+        run: |
+          echo "✓ Proof organization completed"
+
